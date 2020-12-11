@@ -6,3 +6,5 @@ idna==2.10
 requests==2.25.0
 soupsieve==2.0.1
 urllib3==1.26.2
+
+#garder que le nécessaire (beautifulsoup4, requests, lxml)
