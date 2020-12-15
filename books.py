@@ -46,6 +46,11 @@ def scrap_book(url):
         print("Vérifier l'adresse de la page")
 
 
-scrap_book(url)
 
 
+def main():
+    scrap_book()
+
+
+if __name__ == "__main__":
+    main()
