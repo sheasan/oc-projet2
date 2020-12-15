@@ -22,4 +22,9 @@ if response.ok:
     for subtitle in subtitles:
         partial_books_links = subtitle.a.get("href")
         complete_books_links = urljoin("https://books.toscrape.com/catalogue/", partial_books_links)
-        print(complete_books_links)
+        #print(complete_books_links)
+
+for i in range(1, 51):
+    page_number = i
+    page_url = f"https://books.toscrape.com/catalogue/page-{i}.html"
+    print(page_url)
