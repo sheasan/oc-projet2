@@ -6,7 +6,7 @@ from urllib.parse import urljoin
 
 import csv
 
-import books.py
+import books
 
 #url = "https://books.toscrape.com/catalogue/page-1.html"
 
@@ -28,7 +28,7 @@ import books.py
         complete_books_links = urljoin("https://books.toscrape.com/catalogue/", partial_books_links)
         #print(complete_books_links)'''
 
-for i in range(1, 51):
+for i in range(1, 2):
     page_number = i
     page_url = f"https://books.toscrape.com/catalogue/page-{i}.html"
 
@@ -40,8 +40,11 @@ for i in range(1, 51):
         subtitles = soup.find_all("h3")
         for subtitle in subtitles:
             partial_books_links = subtitle.a.get("href")
-            complete_books_links = urljoin("https://books.toscrape/catalogue/", partial_books_links)
+            complete_books_links = urljoin("https://books.toscrape.com/catalogue/", partial_books_links)
             print(complete_books_links)
+            all_data_books = books.scrap_book(complete_books_links)
+            
+
 
 
 

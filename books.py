@@ -47,7 +47,6 @@ def scrap_book(url):
 
 
 
-
 def main():
     scrap_book()
 
