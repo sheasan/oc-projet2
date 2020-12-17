@@ -4,6 +4,8 @@ from bs4 import BeautifulSoup
 
 from urllib.parse import urljoin
 
+import urllib.request
+
 import csv
 
 import books
@@ -40,6 +42,9 @@ with open("scrapfile.csv", mode="w", newline="") as file:
                 #writer.writerow([complete_books_links])
                 print("L'url du livre est :", complete_books_links)
                 all_data_books = books.scrap_book(complete_books_links)
+
+                #Telechargement et enregistrement de l'image
+                urllib.request.urlretrieve(books.image_url, books.title)
 
                 writer.writerow({"product_page_url": complete_books_links,
                                  "universal_ product_code (upc)": books.elements[0].text,
