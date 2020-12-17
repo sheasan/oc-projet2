@@ -8,30 +8,31 @@ import csv
 
 import books
 
-for i in range(1, 51):
-    page_number = i
-    page_url = f"https://books.toscrape.com/catalogue/page-{i}.html"
 
+with open("scrapfile.csv", mode="w", newline="") as file:
+    fieldnames = ["product_page_url",
+                  "universal_ product_code (upc)",
+                  "title",
+                  "price_including_tax", 
+                  "price_excluding_tax",
+                  "number_available",
+                  "product_description",
+                  "category",
+                  "review_rating",
+                  "image_url"]
+    writer = csv.DictWriter(file, fieldnames=fieldnames)
+    writer.writeheader()
 
-    response = requests.get(page_url)
-    if response.ok:
+    for i in range(1, 3):
+        page_number = i
+        page_url = f"https://books.toscrape.com/catalogue/page-{i}.html"
 
-        soup = BeautifulSoup(response.text, "lxml")
-        subtitles = soup.find_all("h3")
+        response = requests.get(page_url)
+        if response.ok:
+            soup = BeautifulSoup(response.text, "lxml")
+            subtitles = soup.find_all("h3")
 
-        with open("scrapfile.csv", mode="w", newline="") as file:
-            fieldnames = ["product_page_url",
-                          "universal_ product_code (upc)",
-                          "title",
-                          "price_including_tax", 
-                          "price_excluding_tax",
-                          "number_available",
-                          "product_description",
-                          "category",
-                          "review_rating",
-                          "image_url"]
-            writer = csv.DictWriter(file, fieldnames=fieldnames)
-            writer.writeheader()
+        
 
             for subtitle in subtitles:
                 partial_books_links = subtitle.a.get("href")
@@ -52,11 +53,3 @@ for i in range(1, 51):
                                  "image_url": books.image_url})
     else:
         print("Vérifier l'url")
-
-
-                
-
-
-
-
-    
