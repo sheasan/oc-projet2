@@ -31,6 +31,11 @@ def scrap_book(url):
             #Création d'un objet beautifulsoup
             soup = BeautifulSoup(response.text, "lxml")
 
+            #Récupération du titre du livre
+            global title
+            title = soup.h1.string
+            print("Le titre du livre est :", title)
+
             #Récupération de la catégorie
             global category
             category = soup.select(".breadcrumb > li:nth-child(3) > a")[0].text
@@ -74,12 +79,12 @@ def scrap_book(url):
     else:
         print("Vérifier l'adresse de la page")
     
-    return category, notation, description, image_url, elements
+    return title, category, notation, description, image_url, elements
 
 
 
 def main():
-    scrap_book()
+    scrap_book(url)
 
 
 if __name__ == "__main__":

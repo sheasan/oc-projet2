@@ -43,6 +43,7 @@ for i in range(1, 2):
         with open("scrapfile.csv", mode="w", newline="") as file:
             fieldnames = [  "product_page_url",
                             "universal_ product_code (upc)",
+                            "title",
                             "price_including_tax", 
                             "price_excluding_tax",
                             "number_available",
@@ -61,14 +62,19 @@ for i in range(1, 2):
                 all_data_books = books.scrap_book(complete_books_links)
 
                 writer.writerow({"product_page_url": complete_books_links,
-                                 "category": books.category,
-                                 "review_rating": books.notation,
-                                 "product_description": books.description,
-                                 "image_url": books.image_url,
                                  "universal_ product_code (upc)": books.elements[0].text,
+                                 "title": books.title,
                                  "price_including_tax": books.elements[2].text,
                                  "price_excluding_tax": books.elements[3].text,
-                                 "number_available": books.elements[5].text
+                                 "number_available": books.elements[5].text,
+                                 "product_description": books.description,
+                                 "category": books.category,
+                                 "review_rating": books.notation,
+                                 "image_url": books.image_url,
+                                 
+                                 
+                                 
+                                 
             })
 
 
