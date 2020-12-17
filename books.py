@@ -33,33 +33,25 @@ def scrap_book(url):
 
             #Récupération de la catégorie
             category = soup.select(".breadcrumb > li:nth-child(3) > a")[0].text
-            #writer.writerow({"category": category})
             print("La catégorie est :", category)
 
             #Récupération de la notation avec nombre d'étoiles
             star = soup.find(class_="star-rating")
             notation = star["class"][1]
-            #writer.writerow({"review_rating": notation})
             print("La notation du livre est :", notation)
 
             #Récupération de la description du livre
             description = soup.find("meta", attrs={"name" : "description"}).attrs["content"]
-            #writer.writerow({"product_description": description})
             print("La description du livre :", description)
 
             #Récuperation du lien de l'image de la couverture du livre
             image_url_relative = soup.img.attrs["src"]
             image_url = urljoin("https://books.toscrape.com", image_url_relative)
-            #writer.writerow({"image_url": image_url})
             print("L'Url de la couverture du livre est :", image_url)
 
             #Récupération de différentes données requises du livre
             elements = soup.find_all("td")
             element = ["UPC :"+" "+elements[0].text, "price_including_tax :"+" "+elements[2].text, "price_excluding_tax :"+" "+elements[3].text, "number_available :"+" "+elements[5].text]
-            #writer.writerow({"universal_ product_code (upc)": elements[0].text})
-            #writer.writerow({"price_including_tax": elements[2].text})
-            #writer.writerow({"price_excluding_tax": elements[3].text})
-            #writer.writerow({"number_available": elements[5].text})
             print(element)
 
             #Ecriture dans le fichier csv
