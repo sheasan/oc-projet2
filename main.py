@@ -8,7 +8,7 @@ import csv
 
 import books
 
-for i in range(1, 2):
+for i in range(1, 51):
     page_number = i
     page_url = f"https://books.toscrape.com/catalogue/page-{i}.html"
 
@@ -17,20 +17,19 @@ for i in range(1, 2):
     if response.ok:
 
         soup = BeautifulSoup(response.text, "lxml")
-
         subtitles = soup.find_all("h3")
 
         with open("scrapfile.csv", mode="w", newline="") as file:
-            fieldnames = [  "product_page_url",
-                            "universal_ product_code (upc)",
-                            "title",
-                            "price_including_tax", 
-                            "price_excluding_tax",
-                            "number_available",
-                            "product_description",
-                            "category",
-                            "review_rating",
-                            "image_url"]
+            fieldnames = ["product_page_url",
+                          "universal_ product_code (upc)",
+                          "title",
+                          "price_including_tax", 
+                          "price_excluding_tax",
+                          "number_available",
+                          "product_description",
+                          "category",
+                          "review_rating",
+                          "image_url"]
             writer = csv.DictWriter(file, fieldnames=fieldnames)
             writer.writeheader()
 
@@ -51,6 +50,8 @@ for i in range(1, 2):
                                  "category": books.category,
                                  "review_rating": books.notation,
                                  "image_url": books.image_url})
+    else:
+        print("Vérifier l'url")
 
 
                 
