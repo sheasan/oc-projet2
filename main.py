@@ -32,18 +32,27 @@ for i in range(1, 2):
     page_number = i
     page_url = f"https://books.toscrape.com/catalogue/page-{i}.html"
 
+
     response = requests.get(page_url)
     if response.ok:
 
         soup = BeautifulSoup(response.text, "lxml")
 
         subtitles = soup.find_all("h3")
-        for subtitle in subtitles:
-            partial_books_links = subtitle.a.get("href")
-            complete_books_links = urljoin("https://books.toscrape.com/catalogue/", partial_books_links)
-            print(complete_books_links)
-            all_data_books = books.scrap_book(complete_books_links)
-            
+
+        with open("scrapfile.csv", mode="w", newline="") as file:
+            writer = csv.writer(file)
+            for subtitle in subtitles:
+                partial_books_links = subtitle.a.get("href")
+                complete_books_links = urljoin("https://books.toscrape.com/catalogue/", partial_books_links)
+                writer.writerow([complete_books_links])
+                print("L'url du livre est :", complete_books_links)
+                all_data_books = books.scrap_book(complete_books_links)
+
+            #with open("scrapfile.csv", mode="w") as file:
+                #writer = csv.writer(file)
+
+                
 
 
 
