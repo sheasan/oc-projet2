@@ -1,13 +1,8 @@
 import requests
-
 from bs4 import BeautifulSoup
-
 from urllib.parse import urljoin
-
 import urllib.request
-
 import csv
-
 import books
 
 
@@ -44,17 +39,17 @@ with open("scrapfile.csv", mode="w", newline="") as file:
                 all_data_books = books.scrap_book(complete_books_links)
 
                 #Telechargement et enregistrement de l'image
-                urllib.request.urlretrieve(books.image_url, books.title)
+                urllib.request.urlretrieve(books.scrap_book.book_data["image_url"], books.scrap_book.book_data["title"])
 
                 writer.writerow({"product_page_url": complete_books_links,
-                                 "universal_ product_code (upc)": books.elements[0].text,
-                                 "title": books.title,
-                                 "price_including_tax": books.elements[2].text,
-                                 "price_excluding_tax": books.elements[3].text,
-                                 "number_available": books.elements[5].text,
-                                 "product_description": books.description,
-                                 "category": books.category,
-                                 "review_rating": books.notation,
-                                 "image_url": books.image_url})
+                                 "universal_ product_code (upc)": books.scrap_book.book_data["universal_ product_code (upc)"],
+                                 "title": books.scrap_book.book_data["title"],
+                                 "price_including_tax": books.scrap_book.book_data["price_including_tax"],
+                                 "price_excluding_tax": books.scrap_book.book_data["price_excluding_tax"],
+                                 "number_available": books.scrap_book.book_data["number_available"],
+                                 "product_description": books.scrap_book.book_data["product_description"],
+                                 "category": books.scrap_book.book_data["category"],
+                                 "review_rating": books.scrap_book.book_data["review_rating"],
+                                 "image_url": books.scrap_book.book_data["image_url"]})
     else:
         print("Vérifier l'url")
