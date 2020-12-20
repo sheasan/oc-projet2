@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 import csv
+import argparse
 
 url = "https://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html"
 
@@ -67,9 +68,12 @@ def scrap_book(url):
     return scrap_book.book_data
 
 
-def main():
-    scrap_book()
+def main(args):
+    scrap_book(args.url)
 
-
+#Utilisation du module Argparse pour entrer le paramètre de la fonction en ligne de commande
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description="url par live du site https://books.toscrape.com pour scraping")
+    parser.add_argument("--url", type=str, help="https://books.toscrape.com/catalogue/a-light-in-the-attic_1000")
+    args = parser.parse_args()
+    main(args)

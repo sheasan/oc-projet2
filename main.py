@@ -6,6 +6,8 @@ import csv
 import books
 import math
 import os
+import argparse
+
 
 url = "https://books.toscrape.com"
 
@@ -123,9 +125,13 @@ def parse_all(url):
                                     "image_url": books.scrap_book.book_data["image_url"]})
 
 
-def main():
-    parse_all()
+def main(args):
+    parse_all(args.url)
 
+#Utilisation du module Argparse pour entrer le paramètre de la fonction en ligne de commande
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description="url du site pour effectuer le scraping")
+    parser.add_argument("--url", type=str, help="https://books.toscrape.com")
+    args = parser.parse_args()
+    main(args)
 
