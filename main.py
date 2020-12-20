@@ -123,4 +123,9 @@ def parse_all(url):
                                     "image_url": books.scrap_book.book_data["image_url"]})
 
 
-parse_all(url)
+def main():
+    parse_all()
+
+if __name__ == "__main__":
+    main()
+
