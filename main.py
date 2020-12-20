@@ -6,6 +6,7 @@ import csv
 import books
 import math
 import os
+import re
 
 '''with open("scrapfile.csv", mode="w", newline="") as file:
     fieldnames = ["product_page_url",
@@ -133,8 +134,11 @@ if response.ok:
                                  "review_rating": books.scrap_book.book_data["review_rating"],
                                  "image_url": books.scrap_book.book_data["image_url"]})
                         
+                        #Gestion des caractères spéciaux
+                        clean_title = books.scrap_book.book_data["title"].replace("/", "_")
+
                         # Telechargement de l'image de la couverture du livre
-                        urllib.request.urlretrieve(books.scrap_book.book_data["image_url"], "/home/ali/Documents/Openclassrooms/Projets/oc-projet2/data/pictures/"+category_name+"/"+books.scrap_book.book_data["title"])
+                        urllib.request.urlretrieve(books.scrap_book.book_data["image_url"], "/home/ali/Documents/Openclassrooms/Projets/oc-projet2/data/pictures/"+category_name+"/"+clean_title)
 
             # Si présence d'une seule page dans la catégorie
             else:
@@ -146,8 +150,11 @@ if response.ok:
                     print(complete_books_links)
                     all_data_books = books.scrap_book(complete_books_links)
 
+                    #Gestion des caractères spéciaux
+                    clean_title = books.scrap_book.book_data["title"].replace("/", "_")
+
                     # Telechargement de l'image de la couverture du livre
-                    urllib.request.urlretrieve(books.scrap_book.book_data["image_url"], "/home/ali/Documents/Openclassrooms/Projets/oc-projet2/data/pictures/"+category_name+"/"+books.scrap_book.book_data["title"])
+                    urllib.request.urlretrieve(books.scrap_book.book_data["image_url"], "/home/ali/Documents/Openclassrooms/Projets/oc-projet2/data/pictures/"+category_name+"/"+clean_title)
 
                     writer.writerow({"product_page_url": complete_books_links,
                                  "universal_ product_code (upc)": books.scrap_book.book_data["universal_ product_code (upc)"],
