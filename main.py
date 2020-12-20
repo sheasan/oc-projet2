@@ -21,10 +21,7 @@ import math
     writer = csv.DictWriter(file, fieldnames=fieldnames)
     writer.writeheader()
 
-    for i in range(1, 3):
-        page_number = i
-        page_url = f"https://books.toscrape.com/catalogue/page-{i}.html"
-
+    for i in range(1, 3):books.scrap_book(complete_books_links
         response = requests.get(page_url)
         if response.ok:
             soup = BeautifulSoup(response.text, "lxml")
@@ -78,34 +75,39 @@ if response.ok:
 
     # Pour chaque catégorie déterminer la pagination
     for category_element in category_list:
-        parse_page(category_element)
+        parse_category_page = parse_page(category_element)
 
         # Obtenir le nombre de pages par catégorie
-        parse_books_quantity = parse_page.soup.select(".form-horizontal > strong:nth-child(2)")[0].text
+        parse_books_quantity = parse_category_page.select(".form-horizontal > strong:nth-child(2)")[0].text
         books_quantity_result = int(parse_books_quantity)
         books_quantity_per_page = 20
         pages_number = math.ceil(books_quantity_result/books_quantity_per_page)
 
         # Si il y'a plus d'une page dans la catégorie
         if pages_number > 1:
-
             for i in range(1, pages_number+1):
                 page_url = urljoin(category_element, f"page-{i}.html")
-                parse_page(page_url)
+                multiple_pages = parse_page(page_url)
 
-                soup = BeautifulSoup(response.text, "lxml")
-                subtitles = soup.find_all("h3")
+                #soup = BeautifulSoup(response.text, "lxml")
+                many_page_subtitles = multiple_pages.find_all("h3")
 
-                for subtitle in subtitles:
-                    partial_books_links = subtitle.a.get("href")
-                    print(partial_books_links)
+                for many_page_subtitle in many_page_subtitles:
+                    partial_books_links = many_page_subtitle.a.get("href").replace("../../..", "catalogue")
                     complete_books_links = urljoin("https://books.toscrape.com", partial_books_links)
                     print("L'url du livre est :", complete_books_links)
                     all_data_books = books.scrap_book(complete_books_links)
 
-
+        # Si présence d'une seule page dans la catégorie
         else:
-            print("wait")
+            single_page_subtitles = parse_category_page.find_all("h3")
+
+            for single_page_subtitle in single_page_subtitles:
+                partial_books_links = single_page_subtitle.a.get("href").replace("../../..", "catalogue")
+                complete_books_links = urljoin("https://books.toscrape.com", partial_books_links)
+                print(complete_books_links)
+                all_data_books = books.scrap_book(complete_books_links)
+            
 
 
 
