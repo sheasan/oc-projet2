@@ -78,24 +78,15 @@ def parse_all(url):
                             partial_books_links = many_page_subtitle.a.get("href").replace("../../..", "catalogue")
                             complete_books_links = urljoin("https://books.toscrape.com", partial_books_links)
                             print("L'url du livre est :", complete_books_links)
-                            all_data_books = books.scrap_book(complete_books_links)
+                            all_data_books = scrap_book(complete_books_links)
 
                             writer.writerow({"product_page_url": complete_books_links,
-                                    "universal_ product_code (upc)": books.scrap_book.book_data["universal_ product_code (upc)"],
-                                    "title": books.scrap_book.book_data["title"],
-                                    "price_including_tax": books.scrap_book.book_data["price_including_tax"],
-                                    "price_excluding_tax": books.scrap_book.book_data["price_excluding_tax"],
-                                    "number_available": books.scrap_book.book_data["number_available"],
-                                    "product_description": books.scrap_book.book_data["product_description"],
-                                    "category": books.scrap_book.book_data["category"],
-                                    "review_rating": books.scrap_book.book_data["review_rating"],
-                                    "image_url": books.scrap_book.book_data["image_url"]})
-                            
-                            #Gestion des caractères spéciaux
-                            clean_title = books.scrap_book.book_data["title"].replace("/", "_")
-
-                            # Telechargement de l'image de la couverture du livre
-                            urllib.request.urlretrieve(books.scrap_book.book_data["image_url"], "/home/ali/Documents/Openclassrooms/Projets/oc-projet2/data/pictures/"+category_name+"/"+clean_title)
+                                    "universal_ product_code (upc)": scrap_book.book_data["universal_ product_code (upc)"],
+                                    "title": scrap_book.book_data["title"],
+                                    "price_including_tax": scrap_book.book_data["price_including_tax"],
+                                    "price_excluding_taxin(category_element, f"page-{i}.html")
+                        multiple_pages = parse_page(page_url)de la couverture du livre
+                            urllib.request.urlretrieve(scrap_book.book_data["image_url"], "/home/ali/Documents/Openclassrooms/Projets/oc-projet2/data/pictures/"+category_name+"/"+clean_title)
 
                 # Si présence d'une seule page dans la catégorie
                 else:
@@ -105,33 +96,29 @@ def parse_all(url):
                         partial_books_links = single_page_subtitle.a.get("href").replace("../../..", "catalogue")
                         complete_books_links = urljoin("https://books.toscrape.com", partial_books_links)
                         print(complete_books_links)
-                        all_data_books = books.scrap_book(complete_books_links)
+                        book_data = scrap_book(complete_books_links)
 
                         #Gestion des caractères spéciaux
-                        clean_title = books.scrap_book.book_data["title"].replace("/", "_")
+                        clean_title = scrap_book.book_data["title"].replace("/", "_")
 
                         # Telechargement de l'image de la couverture du livre
-                        urllib.request.urlretrieve(books.scrap_book.book_data["image_url"], "/home/ali/Documents/Openclassrooms/Projets/oc-projet2/data/pictures/"+category_name+"/"+clean_title)
+                        urllib.request.urlretrieve(scrap_book.book_data["image_url"], "/home/ali/Documents/Openclassrooms/Projets/oc-projet2/data/pictures/"+category_name+"/"+clean_title)
 
                         writer.writerow({"product_page_url": complete_books_links,
-                                    "universal_ product_code (upc)": books.scrap_book.book_data["universal_ product_code (upc)"],
-                                    "title": books.scrap_book.book_data["title"],
-                                    "price_including_tax": books.scrap_book.book_data["price_including_tax"],
-                                    "price_excluding_tax": books.scrap_book.book_data["price_excluding_tax"],
-                                    "number_available": books.scrap_book.book_data["number_available"],
-                                    "product_description": books.scrap_book.book_data["product_description"],
-                                    "category": books.scrap_book.book_data["category"],
-                                    "review_rating": books.scrap_book.book_data["review_rating"],
-                                    "image_url": books.scrap_book.book_data["image_url"]})
+                                    "universal_ product_code (upc)": scrap_book.book_data["universal_ product_code (upc)"],
+                                    "title": scrap_book.book_data["title"],
+                                    "price_including_tax": scrap_book.book_data["price_including_tax"],
+                                    "price_excluding_tax": scrap_book.book_data["price_excluding_tax"],
+                                    "number_available": scrap_book.book_data["number_available"],
+                                    "product_description": scrap_book.book_data["product_description"],
+                                    "category": scrap_book.book_data["category"],
+                                    "review_rating": scrap_book.book_data["review_rating"],
+                                    "image_url": scrap_book.book_data["image_url"]})
+
+def main():
+    parse_all()
 
 
-def main(args):
-    parse_all(args.url)
 
-#Utilisation du module Argparse pour entrer le paramètre de la fonction en ligne de commande
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="url du site pour effectuer le scraping")
-    parser.add_argument("--url", type=str, help="https://books.toscrape.com")
-    args = parser.parse_args()
-    main(args)
-
+    main()
