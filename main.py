@@ -97,7 +97,7 @@ def parse_all_books(url):
 
                     writer.writerow({"product_page_url": complete_books_links,
                                             "universal_ product_code (upc)": all_data_books["universal_ product_code (upc)"],
-                                            "title": clean_title,
+                                            "title": all_data_books["title"],
                                             "price_including_tax": all_data_books["price_including_tax"],
                                             "price_excluding_tax": all_data_books["price_excluding_tax"],
                                             "number_available": all_data_books["number_available"],
