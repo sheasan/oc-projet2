@@ -12,6 +12,7 @@ url = "https://books.toscrape.com"
 
 
 def parse_page(url):
+    """La fonction parse_page() effectue le parsing d'un site internet à partir de son lien url"""
     response = requests.get(url)
     if response.ok:
         parse_page = BeautifulSoup(response.text, "lxml")
@@ -21,6 +22,12 @@ def parse_page(url):
 
 
 def parse_all_books(url):
+
+    """
+    La fonction parse_all_books doit être utilisée pour parser et extraire les données de l'ensemble des livres du site
+    https://books.toscrape.com uniquement
+    """
+
     # Parsing de la page
     categories_list = []
     soup = parse_page(url)
@@ -82,6 +89,7 @@ def parse_all_books(url):
                     partial_books_links = book_subtitle.a.get("href").replace("../../..", "catalogue")
                     complete_books_links = urljoin("https://books.toscrape.com", partial_books_links)
                     all_data_books = book.scrap_book(complete_books_links)
+                    print(iteration)
 
                     # Gestion des caractères spéciaux
                     clean_title = str(iteration)+"."+all_data_books["title"].replace("/", "_")
