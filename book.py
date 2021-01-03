@@ -16,7 +16,7 @@ def scrap_book(url):
     if response.ok:
 
         # Création d'un objet beautifulsoup
-        soup = BeautifulSoup(response.text, "lxml")
+        soup = BeautifulSoup(response.content, "lxml")
 
         # Récupération du titre du livre
         title = soup.h1.string

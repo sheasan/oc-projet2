@@ -15,7 +15,7 @@ def parse_page(url):
     """La fonction parse_page() effectue le parsing d'un site internet à partir de son lien url"""
     response = requests.get(url)
     if response.ok:
-        parse_page = BeautifulSoup(response.text, "lxml")
+        parse_page = BeautifulSoup(response.content, "lxml")
     else:
         print("Vérifier l'url")
     return parse_page
@@ -54,7 +54,7 @@ def parse_all_books(url):
         # print(category_name)
 
         # Création d'un fichier csv par catégorie
-        with open(("/home/ali/Documents/Openclassrooms/Projets/oc-projet2/data/csv_files/"+category_name+".csv"), mode="w", newline="") as file:
+        with open(("/home/ali/Documents/Openclassrooms/Projets/oc-projet2/data/csv_files/"+category_name+".csv"), mode="w", newline="", encoding="utf-8") as file:
             fieldnames = ["product_page_url",
                         "universal_ product_code (upc)",
                         "title",
@@ -89,11 +89,9 @@ def parse_all_books(url):
                     partial_books_links = book_subtitle.a.get("href").replace("../../..", "catalogue")
                     complete_books_links = urljoin("https://books.toscrape.com", partial_books_links)
                     all_data_books = book.scrap_book(complete_books_links)
-                    print(iteration)
 
                     # Gestion des caractères spéciaux
                     clean_title = str(iteration)+"."+all_data_books["title"].replace("/", "_")
-                    print(clean_title)
 
                     writer.writerow({"product_page_url": complete_books_links,
                                             "universal_ product_code (upc)": all_data_books["universal_ product_code (upc)"],
