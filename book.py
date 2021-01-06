@@ -56,7 +56,7 @@ def scrap_book(url):
             "review_rating": notation,
             "image_url": image_url
         }
-        print(book_data)
+        print(category, ": ", title)
     else:
         print("Vérifier l'url")
     return book_data
@@ -65,7 +65,8 @@ def scrap_book(url):
 def main(args):
     print(scrap_book(args.url))
 
-#Utilisation du module Argparse pour entrer le paramètre de la fonction en ligne de commande
+
+# Utilisation du module Argparse pour entrer le paramètre de la fonction en ligne de commande
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="url par live du site https://books.toscrape.com pour scraping")
     parser.add_argument("--url", type=str, help="https://books.toscrape.com/catalogue/a-light-in-the-attic_1000")
