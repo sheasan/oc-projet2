@@ -51,25 +51,11 @@ def parse_all_books(url):
 
     # Pour chaque catégorie déterminer la pagination
     for category_url in categories_list:
-        # print(category_url)
         parse_category_page = parse_page(category_url)
         category_name = parse_category_page.h1.text
-        # print(category_name)
+
+        # Liste pour stockage des données de dictionnaires
         dict_data_list_by_category = []
-        # Création d'un fichier csv par catégorie
-        # with open(("/home/ali/Documents/Openclassrooms/Projets/oc-projet2/data/csv_files/"+category_name+".csv"), mode="w", newline="", encoding="utf-8") as file:
-        #     fieldnames = ["product_page_url",
-        #                 "universal_ product_code (upc)",
-        #                 "title",
-        #                 "price_including_tax", 
-        #                 "price_excluding_tax",
-        #                 "number_available",
-        #                 "product_description",
-        #                 "category",
-        #                 "review_rating",
-        #                 "image_url"]
-        #     writer = csv.DictWriter(file, fieldnames=fieldnames)
-        #     writer.writeheader()
 
         # Obtenir le nombre de pages par catégorie
         parse_books_quantity = parse_category_page.select(".form-horizontal > strong:nth-child(2)")[0].text
@@ -84,7 +70,6 @@ def parse_all_books(url):
             else:
                 page_url = category_url
 
-            # print(page_url)
             each_parsed_category_page = parse_page(page_url)
             books_subtitles = each_parsed_category_page.find_all("h3")
 
@@ -92,7 +77,6 @@ def parse_all_books(url):
                 partial_books_links = book_subtitle.a.get("href").replace("../../..", "catalogue")
                 complete_books_links = urljoin("https://books.toscrape.com", partial_books_links)
                 all_data_books = book.scrap_book(complete_books_links)
-
 
                 # Comptage nombre de livre
                 count.append(complete_books_links)
@@ -104,20 +88,9 @@ def parse_all_books(url):
                 # Gestion des caractères spéciaux
                 clean_title = str(iteration)+"."+all_data_books["title"].replace("/", "_")
                 print(category_name)
-                # writer.writerow({"product_page_url": complete_books_links,
-                #                         "universal_ product_code (upc)": all_data_books["universal_ product_code (upc)"],
-                #                         "title": all_data_books["title"],
-                #                         "price_including_tax": all_data_books["price_including_tax"],
-                #                         "price_excluding_tax": all_data_books["price_excluding_tax"],
-                #                         "number_available": all_data_books["number_available"],
-                #                         "product_description": all_data_books["product_description"],
-                #                         "category": all_data_books["category"],
-                #                         "review_rating": all_data_books["review_rating"],
-                #                         "image_url": all_data_books["image_url"]})
-
 
                 # Telechargement de l'image de la couverture du livre
-                # urllib.request.urlretrieve(all_data_books["image_url"], "/home/ali/Documents/Openclassrooms/Projets/oc-projet2/data/pictures/"+clean_title)
+                urllib.request.urlretrieve(all_data_books["image_url"], "/home/ali/Documents/Openclassrooms/Projets/oc-projet2/data/pictures/"+clean_title)
     
         csv_columns = ["product_page_url", "universal_ product_code (upc)", "title", "price_including_tax", "price_excluding_tax", "number_available", "product_description", "category", "review_rating", "image_url"]
         csv_file = category_name+".csv"
@@ -131,6 +104,6 @@ def parse_all_books(url):
             print("I/O error")
     
     print(len(count))
-    
+
 
 parse_all_books(url)
