@@ -34,7 +34,7 @@ def parse_all_books(url):
     # Création d'une liste vide
     categories_list = []
 
-    # Identification et extraction des catégories
+    # Identification et extraction des différents lien de catégories contenu dans la balise a
     categories = soup.find(class_="nav nav-list").find_all("a")
 
     # Création d'un répertoire pour les fichiers csv et image
@@ -42,7 +42,7 @@ def parse_all_books(url):
     os.mkdir("/home/ali/Documents/Openclassrooms/Projets/oc-projet2/data/csv_files")
     os.mkdir("/home/ali/Documents/Openclassrooms/Projets/oc-projet2/data/pictures")
 
-    # Parcourir la liste des catégories pour obtenir l'url complet de chaque catégorie
+    # Parcourir la liste des catégories pour obtenir l'url complet de chaque catégorie en effectuant une fusion
     for category in categories[1:]:
         relative_link = category.get("href")
         absolute_link = urljoin("https://books.toscrape.com", relative_link)
@@ -69,15 +69,19 @@ def parse_all_books(url):
             else:
                 page_url = category_url
 
+            # Parsing de chaque page de la catégorie en vue d'extraire les données
             each_parsed_category_page = parse_page(page_url)
+
+            # Identifier la balise contenant le titre, lien de chaque livre par page parsée
             books_subtitles = each_parsed_category_page.find_all("h3")
 
+            # Obtenir le lien complet de chaque livre et effectuer un parsing
             for iteration, book_subtitle in enumerate(books_subtitles):
                 partial_books_links = book_subtitle.a.get("href").replace("../../..", "catalogue")
                 complete_books_links = urljoin("https://books.toscrape.com", partial_books_links)
                 book_data = book.scrap_book(complete_books_links)
 
-                # Gestion des caractères spéciaux
+                # Gestion des caractères spéciaux avec ajout devant le titre d'un chiffre unique pour chaque iteration
                 clean_title = str(iteration)+"."+book_data["title"].replace("/", "_")
 
                 # Ajout du lien url de la page du livre dans le dictionnaire
