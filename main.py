@@ -29,8 +29,10 @@ def parse_all_books(url):
     """
 
     # Parsing de la page
-    categories_list = []
     soup = parse_page(url)
+
+    # Création d'une liste vide
+    categories_list = []
 
     # Identification et extraction des catégories
     categories = soup.find(class_="nav nav-list").find_all("a")
@@ -39,9 +41,6 @@ def parse_all_books(url):
     os.mkdir("/home/ali/Documents/Openclassrooms/Projets/oc-projet2/data")
     os.mkdir("/home/ali/Documents/Openclassrooms/Projets/oc-projet2/data/csv_files")
     os.mkdir("/home/ali/Documents/Openclassrooms/Projets/oc-projet2/data/pictures")
-
-    # Variable pour le comptage total du nombre de livre
-    count = []
 
     # Parcourir la liste des catégories pour obtenir l'url complet de chaque catégorie
     for category in categories[1:]:
@@ -54,7 +53,7 @@ def parse_all_books(url):
         parse_category_page = parse_page(category_url)
         category_name = parse_category_page.h1.text
 
-        # Liste pour stockage des données de dictionnaires
+        # Création d'une liste vide pour stocker les données de dictionnaires
         dict_data_list_by_category = []
 
         # Obtenir le nombre de pages par catégorie
@@ -76,22 +75,24 @@ def parse_all_books(url):
             for iteration, book_subtitle in enumerate(books_subtitles):
                 partial_books_links = book_subtitle.a.get("href").replace("../../..", "catalogue")
                 complete_books_links = urljoin("https://books.toscrape.com", partial_books_links)
-                all_data_books = book.scrap_book(complete_books_links)
+                book_data = book.scrap_book(complete_books_links)
 
-                # Comptage nombre de livre
-                count.append(complete_books_links)
+                # Gestion des caractères spéciaux
+                clean_title = str(iteration)+"."+book_data["title"].replace("/", "_")
 
                 # Ajout du lien url de la page du livre dans le dictionnaire
-                all_data_books["product_page_url"] = complete_books_links
+                book_data["product_page_url"] = complete_books_links
 
-                dict_data_list_by_category.append(all_data_books)
-                # Gestion des caractères spéciaux
-                clean_title = str(iteration)+"."+all_data_books["title"].replace("/", "_")
-                print(category_name)
+                # Ajout des données de chaque livre scrapé dans la liste
+                dict_data_list_by_category.append(book_data)
 
                 # Telechargement de l'image de la couverture du livre
-                urllib.request.urlretrieve(all_data_books["image_url"], "/home/ali/Documents/Openclassrooms/Projets/oc-projet2/data/pictures/"+clean_title)
+                urllib.request.urlretrieve(book_data["image_url"], "/home/ali/Documents/Openclassrooms/Projets/oc-projet2/data/pictures/"+clean_title)
+
+                # Réassignation de l'emplacement local pour l'image url du dictionnaire
+                book_data["image_url"] = "/home/ali/Documents/Openclassrooms/Projets/oc-projet2/data/pictures/"+clean_title
     
+        # Ecriture dans fichier CSV de tous les éléments de la liste
         csv_columns = ["product_page_url", "universal_ product_code (upc)", "title", "price_including_tax", "price_excluding_tax", "number_available", "product_description", "category", "review_rating", "image_url"]
         csv_file = category_name+".csv"
         try:
@@ -103,7 +104,5 @@ def parse_all_books(url):
         except IOError:
             print("I/O error")
     
-    print(len(count))
-
 
 parse_all_books(url)

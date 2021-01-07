@@ -56,7 +56,6 @@ def scrap_book(url):
             "review_rating": notation,
             "image_url": image_url
         }
-        print(category, ": ", title)
     else:
         print("Vérifier l'url")
     return book_data
