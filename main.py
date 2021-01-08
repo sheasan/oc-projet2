@@ -37,10 +37,14 @@ def parse_all_books(url):
     # Identification et extraction des différents lien de catégories contenu dans la balise a
     categories = soup.find(class_="nav nav-list").find_all("a")
 
-    # Création d'un répertoire pour les fichiers csv et image
-    os.mkdir("/home/ali/Documents/Openclassrooms/Projets/oc-projet2/data")
-    os.mkdir("/home/ali/Documents/Openclassrooms/Projets/oc-projet2/data/csv_files")
-    os.mkdir("/home/ali/Documents/Openclassrooms/Projets/oc-projet2/data/pictures")
+    try:
+        # Création d'un répertoire pour les fichiers csv et image
+        os.mkdir("/home/ali/Documents/Openclassrooms/Projets/oc-projet2/data")
+        os.mkdir("/home/ali/Documents/Openclassrooms/Projets/oc-projet2/data/csv_files")
+        os.mkdir("/home/ali/Documents/Openclassrooms/Projets/oc-projet2/data/pictures")
+    except FileExistsError:
+        pass
+
 
     # Parcourir la liste des catégories pour obtenir l'url complet de chaque catégorie en effectuant une fusion
     for category in categories[1:]:
