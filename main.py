@@ -1,24 +1,13 @@
-import requests
-from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 import urllib.request
 import csv
 import book
+import parse
 import math
 import os
 
 
 url = "https://books.toscrape.com"
-
-
-def parse_page(url):
-    """La fonction parse_page() effectue le parsing d'un site internet à partir de son lien url"""
-    response = requests.get(url)
-    if response.ok:
-        parse_page = BeautifulSoup(response.content, "lxml")
-    else:
-        print("Vérifier l'url")
-    return parse_page
 
 
 def parse_all_books(url):
@@ -29,7 +18,7 @@ def parse_all_books(url):
     """
 
     # Parsing de la page
-    soup = parse_page(url)
+    soup = parse.parse_page(url)
 
     # Création d'une liste vide
     categories_list = []
@@ -38,7 +27,7 @@ def parse_all_books(url):
     categories = soup.find(class_="nav nav-list").find_all("a")
 
     try:
-        # Création d'un répertoire pour les fichiers csv et image
+        # Création d'un répertoire pour les fichiers csv et image (modifier code pour chemin relatif pour tout utilisateur uqui execute le code)
         os.mkdir("/home/ali/Documents/Openclassrooms/Projets/oc-projet2/data")
         os.mkdir("/home/ali/Documents/Openclassrooms/Projets/oc-projet2/data/csv_files")
         os.mkdir("/home/ali/Documents/Openclassrooms/Projets/oc-projet2/data/pictures")
@@ -54,19 +43,19 @@ def parse_all_books(url):
 
     # Pour chaque catégorie déterminer la pagination
     for category_url in categories_list:
-        parse_category_page = parse_page(category_url)
+        parse_category_page = parse.parse_page(category_url)
         category_name = parse_category_page.h1.text
 
         # Création d'une liste vide pour stocker les données de dictionnaires
         dict_data_list_by_category = []
 
-        # Obtenir le nombre de pages par catégorie
+        # Obtenir le nombre de pages par catégorie (gestion des erreurs pour la transformation avec int)
         parse_books_quantity = parse_category_page.select(".form-horizontal > strong:nth-child(2)")[0].text
         books_quantity_number = int(parse_books_quantity)
         books_quantity_per_page = 20
         pages_number = math.ceil(books_quantity_number/books_quantity_per_page)
 
-        # Déterminer la pagination par page de catégorie
+        # Déterminer la pagination par page de catégorie (utiliser opérateur ternaire!)
         for i in range(1, pages_number+1):
             if i > 1:
                 page_url = urljoin(category_url, f"page-{i}.html")
@@ -74,12 +63,12 @@ def parse_all_books(url):
                 page_url = category_url
 
             # Parsing de chaque page de la catégorie en vue d'extraire les données
-            each_parsed_category_page = parse_page(page_url)
+            each_parsed_category_page = parse.parse_page(page_url)
 
             # Identifier la balise contenant le titre, lien de chaque livre par page parsée
             books_subtitles = each_parsed_category_page.find_all("h3")
 
-            # Obtenir le lien complet de chaque livre et effectuer un parsing
+            # Obtenir le lien complet de chaque livre et effectuer un parsing (meux cibler, les a dans h3) ==> Fair une comprehension de liste qui va directmement appliquer la ligne 84 et 85 (avant le for)
             for iteration, book_subtitle in enumerate(books_subtitles):
                 partial_books_links = book_subtitle.a.get("href").replace("../../..", "catalogue")
                 complete_books_links = urljoin("https://books.toscrape.com", partial_books_links)
@@ -88,7 +77,7 @@ def parse_all_books(url):
                 # Gestion des caractères spéciaux avec ajout devant le titre d'un chiffre unique pour chaque iteration
                 clean_title = str(iteration)+"."+book_data["title"].replace("/", "_")
 
-                # Ajout du lien url de la page du livre dans le dictionnaire
+                # Ajout du lien url de la page du livre dans le dictionnaire (vérifier cette donnée, pas besoin de rajouter)
                 book_data["product_page_url"] = complete_books_links
 
                 # Ajout des données de chaque livre scrapé dans la liste
@@ -111,6 +100,6 @@ def parse_all_books(url):
                     writer.writerow(data)
         except IOError:
             print("I/O error")
-    
+
 
 parse_all_books(url)
