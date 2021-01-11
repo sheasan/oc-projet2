@@ -57,10 +57,7 @@ def parse_all_books(url):
 
         # Déterminer la pagination par page de catégorie (utiliser opérateur ternaire!)
         for i in range(1, pages_number+1):
-            if i > 1:
-                page_url = urljoin(category_url, f"page-{i}.html")
-            else:
-                page_url = category_url
+            page_url = urljoin(category_url, f"page-{i}.html") if i > 1 else category_url
 
             # Parsing de chaque page de la catégorie en vue d'extraire les données
             each_parsed_category_page = parse.parse_page(page_url)
