@@ -51,7 +51,13 @@ def parse_all_books(url):
 
         # Obtenir le nombre de pages par catégorie (gestion des erreurs pour la transformation avec int)
         parse_books_quantity = parse_category_page.select(".form-horizontal > strong:nth-child(2)")[0].text
-        books_quantity_number = int(parse_books_quantity)
+
+        # Gestion des erreurs lors de la conversion
+        try:
+            books_quantity_number = int(parse_books_quantity)
+        except ValueError:
+            books_quantity_number = 1
+
         books_quantity_per_page = 20
         pages_number = math.ceil(books_quantity_number/books_quantity_per_page)
 
@@ -73,9 +79,6 @@ def parse_all_books(url):
 
                 # Gestion des caractères spéciaux avec ajout devant le titre d'un chiffre unique pour chaque iteration
                 clean_title = str(iteration)+"."+book_data["title"].replace("/", "_")
-
-                # Ajout du lien url de la page du livre dans le dictionnaire (vérifier cette donnée, pas besoin de rajouter)
-                book_data["product_page_url"] = complete_books_links
 
                 # Ajout des données de chaque livre scrapé dans la liste
                 dict_data_list_by_category.append(book_data)
