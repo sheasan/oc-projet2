@@ -28,16 +28,23 @@ def parse_all_books(url):
     # Variable contenant l'adresse du home directory de l'utilisateur
     home = os.path.expanduser("~")
 
+    # Création d'un répertoire pour les fichiers csv et image
     try:
-        # Création d'un répertoire pour les fichiers csv et image (modifier code pour chemin relatif pour tout utilisateur uqui execute le code)
         os.mkdir(home+"/data")
+    except FileExistsError:
+        pass
+
+    try:
         os.mkdir(home+"/data/csv_files")
+    except FileExistsError:
+        pass
+
+    try:
         os.mkdir(home+"/data/pictures")
     except FileExistsError:
         pass
 
-
-    # Parcourir la liste des catégories pour obtenir l'url complet de chaque catégorie en effectuant une fusion
+    # Parcourir la liste des catégories pour transformer l'url relatif en url complet des catégories par une jointure
     for category in categories[1:]:
         relative_link = category.get("href")
         absolute_link = urljoin("https://books.toscrape.com", relative_link)
@@ -91,9 +98,16 @@ def parse_all_books(url):
 
                 # Réassignation de l'emplacement local pour l'image url du dictionnaire
                 book_data["image_url"] = home+"/data/pictures/"+clean_title
-    
+
         # Ecriture dans fichier CSV de tous les éléments de la liste
-        csv_columns = ["product_page_url", "universal_ product_code (upc)", "title", "price_including_tax", "price_excluding_tax", "number_available", "product_description", "category", "review_rating", "image_url"]
+        csv_columns = ["product_page_url",
+                       "universal_ product_code (upc)",
+                       "title", "price_including_tax",
+                       "price_excluding_tax",
+                       "number_available",
+                       "product_description",
+                       "category", "review_rating",
+                       "image_url"]
         csv_file = category_name+".csv"
         try:
             with open(home+"/data/csv_files/"+csv_file, 'w') as csvfile:
