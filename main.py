@@ -11,7 +11,6 @@ url = "https://books.toscrape.com"
 
 
 def parse_all_books(url):
-
     """
     La fonction parse_all_books doit être utilisée pour parser et extraire les données de l'ensemble des livres du site
     https://books.toscrape.com uniquement
@@ -26,11 +25,14 @@ def parse_all_books(url):
     # Identification et extraction des différents lien de catégories contenu dans la balise a
     categories = soup.find(class_="nav nav-list").find_all("a")
 
+    # Variable contenant l'adresse du home directory de l'utilisateur
+    home = os.path.expanduser("~")
+
     try:
         # Création d'un répertoire pour les fichiers csv et image (modifier code pour chemin relatif pour tout utilisateur uqui execute le code)
-        os.mkdir("/home/ali/Documents/Openclassrooms/Projets/oc-projet2/data")
-        os.mkdir("/home/ali/Documents/Openclassrooms/Projets/oc-projet2/data/csv_files")
-        os.mkdir("/home/ali/Documents/Openclassrooms/Projets/oc-projet2/data/pictures")
+        os.mkdir(home+"/data")
+        os.mkdir(home+"/data/csv_files")
+        os.mkdir(home+"/data/pictures")
     except FileExistsError:
         pass
 
@@ -56,7 +58,8 @@ def parse_all_books(url):
         try:
             books_quantity_number = int(parse_books_quantity)
         except ValueError:
-            books_quantity_number = 1
+            # Mettre un petit texte explicatif pour l'utilisateur si conversion impossible
+            books_quantity_number = 0
 
         books_quantity_per_page = 20
         pages_number = math.ceil(books_quantity_number/books_quantity_per_page)
@@ -84,16 +87,16 @@ def parse_all_books(url):
                 dict_data_list_by_category.append(book_data)
 
                 # Telechargement de l'image de la couverture du livre
-                urllib.request.urlretrieve(book_data["image_url"], "/home/ali/Documents/Openclassrooms/Projets/oc-projet2/data/pictures/"+clean_title)
+                urllib.request.urlretrieve(book_data["image_url"], home+"/data/pictures/"+clean_title)
 
                 # Réassignation de l'emplacement local pour l'image url du dictionnaire
-                book_data["image_url"] = "/home/ali/Documents/Openclassrooms/Projets/oc-projet2/data/pictures/"+clean_title
+                book_data["image_url"] = home+"/data/pictures/"+clean_title
     
         # Ecriture dans fichier CSV de tous les éléments de la liste
         csv_columns = ["product_page_url", "universal_ product_code (upc)", "title", "price_including_tax", "price_excluding_tax", "number_available", "product_description", "category", "review_rating", "image_url"]
         csv_file = category_name+".csv"
         try:
-            with open("/home/ali/Documents/Openclassrooms/Projets/oc-projet2/data/csv_files/"+csv_file, 'w') as csvfile:
+            with open(home+"/data/csv_files/"+csv_file, 'w') as csvfile:
                 writer = csv.DictWriter(csvfile, fieldnames=csv_columns)
                 writer.writeheader()
                 for data in dict_data_list_by_category:
