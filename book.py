@@ -29,7 +29,7 @@ def scrap_book(url):
         notation = star["class"][1]
 
         # Récupération de la description du livre
-        description = soup.find("meta", attrs={"name": "description"}).attrs["content"]
+        description = soup.find("meta", attrs={"name" : "description"}).attrs["content"]
 
         # Récuperation du lien de l'image de la couverture du livre
         image_url_relative = soup.img.attrs["src"]
