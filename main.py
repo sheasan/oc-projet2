@@ -53,12 +53,14 @@ def parse_all_books(url):
     # Pour chaque catégorie déterminer la pagination
     for category_url in categories_list:
         parse_category_page = parse.parse_page(category_url)
+
+        # Extraction du nom de la catégorie
         category_name = parse_category_page.h1.text
 
         # Création d'une liste vide pour stocker les données de dictionnaires
         dict_data_list_by_category = []
 
-        # Obtenir le nombre de pages par catégorie (gestion des erreurs pour la transformation avec int)
+        # Obtenir le nombre de pages par catégorie
         parse_books_quantity = parse_category_page.select(".form-horizontal > strong:nth-child(2)")[0].text
 
         # Gestion des erreurs lors de la conversion
@@ -67,11 +69,14 @@ def parse_all_books(url):
         except ValueError:
             # Mettre un petit texte explicatif pour l'utilisateur si conversion impossible
             books_quantity_number = 0
+            print("La conversion est impossible, une valeur par défaut a été appliquée : 0")
 
         books_quantity_per_page = 20
+
+        # Déterminer la pagination par catégorie
         pages_number = math.ceil(books_quantity_number/books_quantity_per_page)
 
-        # Déterminer la pagination par page de catégorie (utiliser opérateur ternaire!)
+        #  Parcourir les différentes pages des catégories (utilisation opérateur ternaire)
         for i in range(1, pages_number+1):
             page_url = urljoin(category_url, f"page-{i}.html") if i > 1 else category_url
 
@@ -83,8 +88,14 @@ def parse_all_books(url):
 
             # Obtenir le lien complet de chaque livre et effectuer un parsing (meux cibler, les a dans h3) ==> Fair une comprehension de liste qui va directmement appliquer la ligne 84 et 85 (avant le for)
             for iteration, book_subtitle in enumerate(books_subtitles):
+
+                # Extraction des liens relatifs de chaque livre de la page
                 partial_books_links = book_subtitle.a.get("href").replace("../../..", "catalogue")
+
+                # Reconstitution du lien absolu des livres de la page avec une jointure
                 complete_books_links = urljoin("https://books.toscrape.com", partial_books_links)
+
+                # Extraction des différentes données de chaque livre en utilisation une fonction
                 book_data = book.scrap_book(complete_books_links)
 
                 # Gestion des caractères spéciaux avec ajout devant le titre d'un chiffre unique pour chaque iteration
