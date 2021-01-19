@@ -7,6 +7,15 @@ def parse_page(url):
     response = requests.get(url)
     if response.ok:
         parse_page = BeautifulSoup(response.content, "lxml")
+        print("cocorico")
     else:
         print("Vérifier l'url")
     return parse_page
+
+
+def main():
+    parse_page()
+
+
+if __name__ == "__main__":
+    main()

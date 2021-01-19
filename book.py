@@ -1,7 +1,7 @@
 import requests
-from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 import argparse
+import parse
 
 
 def scrap_book(url):
@@ -15,8 +15,8 @@ def scrap_book(url):
     # Si l'url est valide, execute le bloc d'instructions suivants
     if response.ok:
 
-        # Création d'un objet beautifulsoup
-        soup = BeautifulSoup(response.content, "lxml")
+        # Utilisation de la fonction de parsing depuis un module tier
+        soup = parse.parse_page(url)
 
         # Récupération du titre du livre
         title = soup.h1.string
